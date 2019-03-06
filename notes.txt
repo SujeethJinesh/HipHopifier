@@ -1,0 +1,2 @@
+Use librosa.istft(D) to convert spectrogram back to np array which you can then reconstruct the audio from.
+
