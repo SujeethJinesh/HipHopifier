@@ -2,4 +2,5 @@ env/*
 .ipynb_checkpoints/*
 .idea/*
 .DS_Store
-dataset/*
+dataset/genres/*
+dataset/img_data/*
