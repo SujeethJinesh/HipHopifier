@@ -42,10 +42,12 @@ This webpage template is based on a similar template from Dr. Devi Parikh's
 <!-- Goal -->
 <h2>Abstract</h2>
 <!-- One or two sentences on the motivation behind the problem you are solving. One or two sentences describing the approach you took. One or two sentences on the main result you obtained. -->
-We want to transfer the style of Hip Hop to any audio or music genre. For example, adding in a hip hop style to a classical song sample, or jazz, etc. Sujeeth is taking the approach of using a CNN-RNN architecture and doing style transfer on the Convolutional layers.
+We want to transfer the style of Hip Hop to any audio or music genre. For example, adding in a hip hop style to a classical song sample, or jazz, etc. Sujeeth is taking the approach of using a CNN-RNN architecture and doing style transfer on the Convolutional layers
+Jeremy is using a convolutional neural net to classify on the spectrogram images; style transfer
+will occur using the hidden representations.
 <br><br>
 <!-- figure -->
-<h2>CNN-RNN Model Architecture</h2>
+<h2>CNN-RNN Model Architecture (Sujeeth Jinesh)</h2>
 <!-- A figure that conveys the main idea behind the project or the main application being addressed. (This one is from <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks">AlexNet</a>.) -->
 This figure shows the architecture for the CNN/RNN model we'll be using for style transfer.
 <br><br>
@@ -55,17 +57,30 @@ This figure shows the architecture for the CNN/RNN model we'll be using for styl
 <div>Credit to <a href="https://towardsdatascience.com/using-cnns-and-rnns-for-music-genre-recognition-2435fb2ed6af">Priya Dwivedi</a></div>
 </div>
 
+<h2>CNN Model Architecture (Jeremy Aguilon)</h2>
+This figure shows the architecture fot he CNN model we'll be using for style transfer.
+<img style="height: 200px;" alt="" src="imgs/cnn.png">
+<br><br>
+
 <br><br>
 <!-- Introduction -->
 <h2>Introduction / Background / Motivation</h2>
 <h4>What did you try to do? What problem did you try to solve? Articulate your objectives using absolutely no jargon.</h4>
 Sujeeth isn't sure how to go about doing style transfer to the RNN layer, so we're going to see how well just doing it on the Convolutional layers will go, and then see if there's a reasonable way to achieve style transfer with an RNN. The objective is to produce a spectogram that contains the style of a hip hop sample, but the content of the content sample, and then convert the spectogram back into audio.
 
+Unlike Sujeeth, Jeremy's approach is more conservative in that it only uses the convolutional
+representations. Should the RNN approach not work, much of the learnings from Sujeeth's
+portions may transfer over to this simpler architecture.
+
 <h4>How is it done today, and what are the limits of current practice?</h4>
 Currently there are a few approaches involving <a href="https://arxiv.org/abs/1809.07575">VAE's and GAN's (1)</a>, <a href="https://medium.com/@suraj.jayakumar/tonenet-a-musical-style-transfer-c0a18903c910">VAE's and GAN's (2)</a>, and <a href="https://arxiv.org/pdf/1805.07848.pdf">Wavenet Autoencoders</a>.
 
 <h4>Who cares? If you are successful, what difference will it make?</h4>
 Style transfering music could help DJs make better blends of beats or transition between music easier.
+Furthermore, production music is a <a href="https://variety.com/2017/biz/news/production-music-billion-dollar-business-study-1202563223/">billion-dollar industry</a>. These pieces
+are typically placed in the background of marketing media and film. They are often
+simple pieces that could benefit with the extra volume in genre that architecture like this
+provides.
 
 <br><br>
 <!-- Approach -->
@@ -73,8 +88,12 @@ Style transfering music could help DJs make better blends of beats or transition
 <h4>What did you do exactly? How did you solve the problem? Why did you think it would be successful? Is anything new in your approach?</h4>
 Sujeeth: CNN-RNN, doing regular style transfer on the convolutional layers to produce spectograms. Still working towards results. The approach isn't novel, but will give us a good baseline for what we should be aiming to beat.
 
+Jeremy: CNN, also doing style transfer on the convolutional layers. We predict that although
+it is a similar approach to Sujeeth's, the different classifier downstream (dense vs. recurrent)
+will result in different results. We can then compare the subjective quality of the transfers.
+
 <h4>What problems did you anticipate? What problems did you encounter? Did the very first thing you tried work?</h4>
-Sujeeth: Problems with converting spectogram back into audio because the information is lossy.
+Sujeeth and Jeremy: Problems with converting spectogram back into audio because the information is lossy.
 
 <br><br>
 <!-- Results -->
