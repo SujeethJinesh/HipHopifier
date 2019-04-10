@@ -21,6 +21,8 @@ from keras.utils.data_utils import get_file
 from keras.utils.layer_utils import convert_all_kernels_in_model
 from audio_conv_utils import decode_predictions, preprocess_input
 
+import tensorflow as tf
+
 TH_WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.3/music_tagger_crnn_weights_tf_kernels_th_dim_ordering.h5'
 TF_WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.3/music_tagger_crnn_weights_tf_kernels_tf_dim_ordering.h5'
 
@@ -66,6 +68,7 @@ def MusicTaggerCRNN(weights='msd', input_tensor=None,
     if input_tensor is None:
         melgram_input = Input(shape=input_shape)
     else:
+        input_tensor = tf.convert_to_tensor(input_tensor)
         if not K.is_keras_tensor(input_tensor):
             melgram_input = Input(tensor=input_tensor, shape=input_shape)
         else:

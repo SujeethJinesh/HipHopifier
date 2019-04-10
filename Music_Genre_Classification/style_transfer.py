@@ -96,16 +96,16 @@ if __name__ == '__main__':
     # content_audio_array = K.variable(preprocess_input(np.expand_dims(content_audio_array, axis=0)), dtype='float32')
     content_audio = preprocess_input(content_audio_path)
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
 
-    import ipdb; ipdb.set_trace()
-    plt.figure(figsize=(10, 4))
-    librosa.display.specshow(content_audio,
-                             y_axis='mel', fmax=8000, x_axis='time')
-
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Mel spectrogram')
-    plt.tight_layout()
+    # import ipdb; ipdb.set_trace()
+    # plt.figure(figsize=(10, 4))
+    # librosa.display.specshow(content_audio,
+    #                          y_axis='mel', fmax=8000, x_axis='time')
+    #
+    # plt.colorbar(format='%+2.0f dB')
+    # plt.title('Mel spectrogram')
+    # plt.tight_layout()
 
     # style_audio = load_img(path=style_audio_path, target_size=targetSize)
     # style_audio_array = img_to_array(style_audio)
@@ -113,11 +113,9 @@ if __name__ == '__main__':
     style_audio = preprocess_input(content_audio_path)
 
     gIm0 = np.random.randint(256, size=(targetWidth, targetHeight, 3)).astype('float64')
-    gIm0 = preprocess_input(np.expand_dims(gIm0, axis=0))
+    gIm0 = np.expand_dims(gIm0, axis=0)
     gImPlaceholder = K.placeholder(shape=(1, targetWidth, targetHeight, 3))
     ##
-
-    MusicTaggerCRNN(weights='msd', input_tensor=None, include_top=False)
 
     tf_session = K.get_session()
 
