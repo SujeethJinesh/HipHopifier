@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head>  
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Deep Learning Class Project
+  | Georgia Tech | Fall 2018: CS 4803 / 7643</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+<!-- Le styles -->  
+  <link href="css/bootstrap.css" rel="stylesheet">
+<style>
+body {
+padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+.vis {
+color: #3366CC;
+}
+.data {
+color: #FF9900;
+}
+</style>
+  
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+<div class="page-header">
+
+<!-- Title and Name --> 
+<h1>HipHopifier</h1> 
+<span style="font-size: 20px; line-height: 1.5em;"><strong>Sujeeth Jinesh, Hriday Kamshatti, Jeremy Aguilon</strong></span><br>
+<span style="font-size: 18px; line-height: 1.5em;">Spring 2019 CS 4803 / 7643 Deep Learning: Class Project</span><br>
+<span style="font-size: 18px; line-height: 1.5em;">Georgia Tech</span>
+<hr>
+
+This webpage template is based on a similar template from Dr. Devi Parikh's
+<a href="https://samyak-268.github.io/F18CS4476/">Intro to Computer Vision course</a>.
+
+<!-- Goal -->
+<h2>Introduction / Background / Motivation</h2>
+<!-- One or two sentences on the motivation behind the problem you are solving. One or two sentences describing the approach you took. One or two sentences on the main result you obtained. -->
+We want to transfer the style of Hip Hop to any audio or music genre. For example, adding in a hip hop style to a classical song sample, or jazz, etc.
+Style transfering music could help DJs make better blends of beats or transition between music easier.
+Furthermore, production music is a <a href="https://variety.com/2017/biz/news/production-music-billion-dollar-business-study-1202563223/">billion-dollar industry</a>. These pieces
+are typically placed in the background of marketing media and film. They are often
+simple pieces that could benefit with the extra volume in genre that architecture like this
+provides.
+<br>
+ Currently there are a few approaches for musical style transfer involving <a href="https://arxiv.org/abs/1809.07575">VAE's and GAN's (1)</a>, <a href="https://medium.com/@suraj.jayakumar/tonenet-a-musical-style-transfer-c0a18903c910">VAE's and GAN's (2)</a>, and <a href="https://arxiv.org/pdf/1805.07848.pdf">Wavenet Autoencoders</a>. We will attempt to use a CNN-RNN architecture to implement musical style transfer instead.
+
+
+<h2>Approach</h2>
+
+Sujeeth is taking the approach of using a CNN-RNN architecture and doing style transfer on the Convolutional layers. The network will operate on spectograms. Still working towards results. The approach isn't novel, but will give us a good baseline for what we should be aiming to beat.
+<br><br>
+Hriday is working on a minimalist implementation that uses an untrained CNN for style transfer. The structure of this untrained network is what will be experimented with. Since musical style is somewhat more abstract than images, the results obtained via this untrained network will explore what it means to transfer style without stringent constraints.
+<br><br>
+Jeremy is using a convolutional neural net to classify on the spectrogram images; style transfer
+will occur using the hidden representations. We predict that although it is a similar approach to Sujeeth's, the different classifier downstream (dense vs. recurrent) will result in different results. We can then compare the subjective quality of the transfers.
+
+
+<br>
+
+
+<h2>Experimental Plan</h2>
+We plan to decide on one architurecture (CNN-RNN vs. CNN) to use based on our preliminary results and merge our work together in the near future. Once we decide on a structure, we shall use the following dataset to train our network:
+<ul>
+    <li><a href="http://marsyas.info/downloads/datasets.html">GTZAN Genre Collection</a>:
+        A 1000-track dataset of 30 second sound clips. This dataset encompasses 10 genres.
+    </li>
+</ul>
+ We will judge the quality of our style transfer product by ear and rate the efficacy of our pipeline on some quantitative scale. The details of this have yet to be finalized as of this date.
+<h2>Current Status</h2>
+
+Sujeeth isn't sure how to go about doing style transfer to the RNN layer, so we're going to see how well just doing it on the Convolutional layers will go, and then see if there's a reasonable way to achieve style transfer with an RNN. The objective is to produce a spectogram that contains the style of a hip hop sample, but the content of the content sample, and then convert the spectogram back into audio.
+<br><br>
+Unlike Sujeeth's, Jeremy's approach is more conservative in that it only uses the convolutional
+representations. Should the RNN approach not work, much of the learnings from Sujeeth's
+portions may transfer over to this simpler architecture.
+<br><br>
+Hriday is working on a lightweight CNN implementation that does not rely on a trained network for results. As of today, a pipeline to transfer style using a single-layer untrained CNN has been completed and produces reasonable results in transfering style after about 1500 style transfer iterations. Reasonable in this case entails that a human listerner can tell that style has been transfered to a content track. Further work on this shall be deciding on a deeper architecture that gives qualitatively better results.
+
+
+<br><br>
+<!-- figure -->
+<h2>CNN-RNN Model Architecture (Sujeeth Jinesh)</h2>
+<!-- A figure that conveys the main idea behind the project or the main application being addressed. (This one is from <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks">AlexNet</a>.) -->
+This figure shows the architecture for the CNN/RNN model we'll be using for style transfer.
+<br><br>
+<!-- Main Illustrative Figure --> 
+<div style="text-align: center;">
+<img style="height: 200px;" alt="" src="imgs/cnn-rnn.png">
+<div>Credit to <a href="https://towardsdatascience.com/using-cnns-and-rnns-for-music-genre-recognition-2435fb2ed6af">Priya Dwivedi</a></div>
+</div>
+
+<h2>CNN Model Architecture (Jeremy Aguilon)</h2>
+This figure shows the architecture fot he CNN model we'll be using for style transfer.
+<img style="height: 200px;" alt="" src="imgs/cnn.png">
+<br><br>
+<h2>Style transfer pipeline(Hriday Kamshatti)</h2>
+This figure shows the architecture we are currently using for style transfer.
+<div style="text-align: center;">
+<img style="height: 500px;" alt="" src="imgs/StyleTransferStructure.png">
+</div>
+
+<br><br>
+<!-- Introduction -->
+
+
+<h2>Help</h2>
+Sujeeth and Jeremy: Problems with converting spectogram back into audio because the information is lossy.
+<br>
+Hriday: Anticipated issues with training time on large audio chunks/deeper layers due to limited computational power. Currently using 20s audio chunks with style transfer operating on an untrained single layer CNN to get around this.
+
+
+<!-- Main Results Figure --> 
+<div style="text-align: center;">
+<img style="height: 300px;" alt="" src="imgs/results.png">
+</div>
+<br><br>
+
+  <hr>
+  <footer> 
+  <p>© Sujeeth Jinesh, Hriday Kamshatti, Jeremy Aguilon</p>
+  </footer>
+
+<br><br>
+<!-- Analysis -->
+<h2>Analysis</h2>
+<h4>Do the results make sense? Why or why not? Describe what kind of visualization/analysis you performed in order to verify that your results 1) are correct and 2) explain differences in performance from what was expected (e.g. what appeared in papers). Provide specific claims about why you think your model is or is not doing better, and justify those with qualitative and quantitative experiments (not necessarily just final accuracy numbers, but statistics or other data about what the model is doing).</h4>
+
+<br><br>
+<!-- Team -->
+<h2>Team Member Identification</h2>
+<h4>Provide a list of team members and what each member did in a table</h4>
+
+
+<table style="width:100%">
+  <tr>
+    <th>Name</th>
+    <th>Description of Work</th>
+  </tr>
+  <tr>
+    <td>Sujeeth Jinesh</td>
+    <td>Adapted <a href="http://faroit.com/keras-docs/1.2.1/applications/#musictaggercrnn">Music Tagger CRNN</a> for style transfer task and trained it against audio samples.</td>
+  </tr>
+  <tr>
+    <td>Hriday Kamshatti</td>
+    <td>Adapted a pytorch style transfer pipeilne for use with a provided ANN. </td>
+  </tr>
+  <tr>
+    <td>Jeremy Aguilon</td>
+    <td>Created a CNN for music style transfer, to be compared with the above models
+        in terms of performance.</td>
+  </tr>
+</table>
+
+
+<br><br>
+</div>
+</div>
+
+
+</body></html>
