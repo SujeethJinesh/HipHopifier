@@ -13,7 +13,7 @@ from keras.layers import Input, Dense
 from keras.models import Model
 from keras.layers import Dense, Dropout, Reshape, Permute
 from keras.layers.convolutional import Convolution2D
-from keras.layers.convolutional import MaxPooling2D, ZeroPadding2D
+from keras.layers.convolutional import MaxPooling2D, ZeroPadding2D, ZeroPadding1D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import ELU
 from keras.layers.recurrent import GRU
@@ -85,7 +85,9 @@ def MusicTaggerCRNN(weights='msd', input_tensor=None,
         time_axis = 2
 
     # Input block
-    x = ZeroPadding2D(padding=(0, 37))(melgram_input)
+    # import ipdb; ipdb.set_trace()
+    x = ZeroPadding2D(padding=(0, 37))([melgram_input])
+    x = tf.cast(x, tf.float32)
     x = BatchNormalization(axis=time_axis, name='bn_0_freq')(x)
 
     # Conv block 1
@@ -146,11 +148,3 @@ def MusicTaggerCRNN(weights='msd', input_tensor=None,
 
 if __name__ == '__main__':
     model = MusicTaggerCRNN(weights='msd')
-
-    audio_path = 'audio_file.mp3'
-    melgram = preprocess_input(audio_path)
-    melgrams = np.expand_dims(melgram, axis=0)
-
-    preds = model.predict(melgrams)
-    print('Predicted:')
-    print(decode_predictions(preds))
