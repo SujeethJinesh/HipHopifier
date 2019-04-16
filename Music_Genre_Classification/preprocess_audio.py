@@ -59,13 +59,16 @@ def create_array_and_save(audio_path, title):
 
     y_arr = np.array(genres)
     np.savez("dataset/" + title, X_spect, y_arr)
+    return X_spect
 
 
 def preprocess_audio():
     content_audio_title = "content_audio"
     content_audio_path = "dataset/content_audio/Dee_Yan-Key_-_01_-_Elegy_for_Argus.mov"
-    create_array_and_save(content_audio_path, content_audio_title)
+    content_audio = create_array_and_save(content_audio_path, content_audio_title)
 
     style_audio_title = "style_audio"
     style_audio_path = "dataset/style_audio/Yung_Kartz_-_02_-_Lethal.mov"
-    create_array_and_save(style_audio_path, style_audio_title)
+    style_audio = create_array_and_save(style_audio_path, style_audio_title)
+
+    return content_audio, style_audio
