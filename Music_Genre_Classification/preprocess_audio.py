@@ -33,23 +33,24 @@ def create_spectogram(audio_path):
     return spect.T
 
 
-def plot_spect(track_id):
-    spect = create_spectogram(track_id)
+def plot_spect(spect, title):
     print(spect.shape)
     plt.figure(figsize=(10, 4))
     librosa.display.specshow(spect.T, y_axis='mel', fmax=8000, x_axis='time')
-    plt.colorbar(format='%+2.0f dB')
-    plt.show()
+    # plt.colorbar(format='%+2.0f dB')
+    plt.axis('off')
+    # plt.show()
+    plt.savefig(title)
 
 
-def create_array_and_save(audio_path, title):
+def create_array_and_save(audio_path, title, spectogram_title):
     genres = []
     X_spect = np.empty((0, 640, 128))
     spect = create_spectogram(audio_path)
+    plot_spect(spect, spectogram_title)
 
     # Normalize for small shape differences
     spect = spect[:640, :]
-    # import ipdb; ipdb.set_trace()
     X_spect = np.append(X_spect, [spect], axis=0)
 
     if title == "content_audio":
@@ -64,11 +65,13 @@ def create_array_and_save(audio_path, title):
 
 def preprocess_audio():
     content_audio_title = "content_audio"
+    content_audio_spectogram = "dataset/content_spectogram.png"
     content_audio_path = "dataset/content_audio/Dee_Yan-Key_-_01_-_Elegy_for_Argus.mov"
-    content_audio = create_array_and_save(content_audio_path, content_audio_title)
+    content_audio = create_array_and_save(content_audio_path, content_audio_title, content_audio_spectogram)
 
     style_audio_title = "style_audio"
+    style_audio_spectogram = "dataset/style_spectogram.png"
     style_audio_path = "dataset/style_audio/Yung_Kartz_-_02_-_Lethal.mov"
-    style_audio = create_array_and_save(style_audio_path, style_audio_title)
+    style_audio = create_array_and_save(style_audio_path, style_audio_title, style_audio_spectogram)
 
     return content_audio, style_audio
