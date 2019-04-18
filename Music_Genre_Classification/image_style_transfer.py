@@ -129,6 +129,8 @@ def save_original_size(x, target_size=cImageSizeOrig):
     xIm.save(generated_image_output_path)
     return xIm
 
+def deprocess_spectogram(path):
+    
 
 tf_session = K.get_session()
 cModel = VGG16(include_top=False, weights='imagenet', input_tensor=cImArr)
@@ -157,3 +159,7 @@ xIm = save_original_size(xOut)
 print('Image saved')
 end = time.time()
 print('Time taken: {}'.format(end - start))
+
+deprocess_spectogram("dataset/output.png")
+
+
