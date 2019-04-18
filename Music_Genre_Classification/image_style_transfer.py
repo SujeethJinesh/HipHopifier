@@ -130,7 +130,7 @@ def save_original_size(x, target_size=cImageSizeOrig):
     return xIm
 
 def deprocess_spectogram(path):
-    
+    pass
 
 tf_session = K.get_session()
 cModel = VGG16(include_top=False, weights='imagenet', input_tensor=cImArr)

@@ -4,6 +4,3 @@ env/*
 .ipynb_checkpoints/*
 .idea/*
 .DS_Store
-dataset/genres/*
-dataset/img_data/*
-Music_Genre_Classification/dataset/*
