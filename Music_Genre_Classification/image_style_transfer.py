@@ -129,6 +129,7 @@ def save_original_size(x, target_size=cImageSizeOrig):
     xIm.save(generated_image_output_path)
     return xIm
 
+
 def deprocess_spectogram(path):
     pass
 
@@ -142,14 +143,14 @@ sLayerNames = [
     'block2_conv1',
     'block3_conv1',
     'block4_conv1',
-    'block5_conv1'
+    # 'block5_conv1'
 ]
 
 P = get_feature_reps(x=cImArr, layer_names=[cLayerName], model=cModel)[0]
 As = get_feature_reps(x=sImArr, layer_names=sLayerNames, model=sModel)
 ws = np.ones(len(sLayerNames)) / float(len(sLayerNames))
 
-iterations = 600
+iterations = 20
 x_val = gIm0.flatten()
 start = time.time()
 xopt, f_val, info = fmin_l_bfgs_b(calculate_loss, x_val, fprime=get_grad,
@@ -161,5 +162,3 @@ end = time.time()
 print('Time taken: {}'.format(end - start))
 
 deprocess_spectogram("dataset/output.png")
-
-
