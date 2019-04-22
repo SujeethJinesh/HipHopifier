@@ -48,6 +48,7 @@ import numpy as np
 from scipy.optimize import fmin_l_bfgs_b
 import time
 import argparse
+import pickle
 
 from keras.applications import vgg19
 from keras import backend as K
@@ -276,6 +277,7 @@ for i in range(iterations):
     start_time = time.time()
     x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
                                      fprime=evaluator.grads, maxfun=20)
+    # import ipdb; ipdb.set_trace()
     print('Current loss value:', min_val)
     # save current generated image
     img = deprocess_image(x.copy())
