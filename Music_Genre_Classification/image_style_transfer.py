@@ -6,6 +6,7 @@ from keras.applications import VGG16
 from keras.applications.vgg16 import preprocess_input
 from scipy.optimize import fmin_l_bfgs_b
 import time
+import tensorflow as tf
 
 from preprocess_audio import preprocess_audio
 
@@ -133,32 +134,35 @@ def save_original_size(x, target_size=cImageSizeOrig):
 def deprocess_spectogram(path):
     pass
 
-tf_session = K.get_session()
-cModel = VGG16(include_top=False, weights='imagenet', input_tensor=cImArr)
-sModel = VGG16(include_top=False, weights='imagenet', input_tensor=sImArr)
-gModel = VGG16(include_top=False, weights='imagenet', input_tensor=gImPlaceholder)
-cLayerName = 'block4_conv2'
-sLayerNames = [
-    'block1_conv1',
-    'block2_conv1',
-    'block3_conv1',
-    'block4_conv1',
-    # 'block5_conv1'
-]
 
-P = get_feature_reps(x=cImArr, layer_names=[cLayerName], model=cModel)[0]
-As = get_feature_reps(x=sImArr, layer_names=sLayerNames, model=sModel)
-ws = np.ones(len(sLayerNames)) / float(len(sLayerNames))
+with tf.device('/device:GPU:0'):
+    # tf_session = K.get_session()
+    tf_session = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+    cModel = VGG16(include_top=False, weights='imagenet', input_tensor=cImArr)
+    sModel = VGG16(include_top=False, weights='imagenet', input_tensor=sImArr)
+    gModel = VGG16(include_top=False, weights='imagenet', input_tensor=gImPlaceholder)
+    cLayerName = 'block4_conv2'
+    sLayerNames = [
+        'block1_conv1',
+        'block2_conv1',
+        'block3_conv1',
+        'block4_conv1',
+        # 'block5_conv1'
+    ]
 
-iterations = 20
-x_val = gIm0.flatten()
-start = time.time()
-xopt, f_val, info = fmin_l_bfgs_b(calculate_loss, x_val, fprime=get_grad,
-                                  maxiter=iterations, disp=True)
-xOut = postprocess_array(xopt)
-xIm = save_original_size(xOut)
-print('Image saved')
-end = time.time()
-print('Time taken: {}'.format(end - start))
+    P = get_feature_reps(x=cImArr, layer_names=[cLayerName], model=cModel)[0]
+    As = get_feature_reps(x=sImArr, layer_names=sLayerNames, model=sModel)
+    ws = np.ones(len(sLayerNames)) / float(len(sLayerNames))
 
-deprocess_spectogram("dataset/output.png")
+    iterations = 20
+    x_val = gIm0.flatten()
+    start = time.time()
+    xopt, f_val, info = fmin_l_bfgs_b(calculate_loss, x_val, fprime=get_grad,
+                                      maxiter=iterations, disp=True)
+    xOut = postprocess_array(xopt)
+    xIm = save_original_size(xOut)
+    print('Image saved')
+    end = time.time()
+    print('Time taken: {}'.format(end - start))
+
+    deprocess_spectogram("dataset/output.png")
