@@ -36,16 +36,19 @@ def create_spectogram(audio_path, title):
 
     D = np.stack([D, D, D], axis=2)
 
+    D_min = np.min(D)
     D -= np.min(D)
+
+    D_max = np.max(D)
     D *= 256.0 / np.max(D)
 
-    if title == "style_audio":
-        import ipdb; ipdb.set_trace()
+    # if title == "style_audio":
+    #     import ipdb; ipdb.set_trace()
 
     cv2.imwrite('dataset/' + title + '.png', D)
 
-    # with open("dataset/" + title + ".png", "wb") as file:
-    #     pickle.dump(D, file)
+    with open("dataset/" + title + "_min_max.pickle", "wb") as file:
+        pickle.dump((D_min, D_max), file)
 
     return D
     # spect = librosa.feature.melspectrogram(S=D, n_mels=128, fmax=8000)
