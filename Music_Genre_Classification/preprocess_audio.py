@@ -128,4 +128,13 @@ def preprocess_audio():
     return content_audio, style_audio
 
 
+def deprocess_audio(filename, img):
+    content_min, content_max = pickle.load(open("dataset/content_audio_min_max.pickle", "rb"))
+
+    img = img * (content_max) / 256.0
+    img += content_min
+
+    import ipdb; ipdb.set_trace()
+
+
 preprocess_audio()
