@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 
 import cv2
 
+from PIL import Image
+
 dict_genres = {'Electronic': 1, 'Experimental': 2, 'Folk': 3, 'Hip-Hop': 4,
                'Instrumental': 5, 'International': 6, 'Pop': 7, 'Rock': 8}
 
@@ -28,11 +30,28 @@ def get_tids_from_directory(audio_dir):
     return tids
 
 
-def create_spectogram(audio_path):
+def create_spectogram(audio_path, title):
     y, sr = librosa.load(audio_path)
-    spect = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=2048, hop_length=1024)
-    spect = librosa.power_to_db(spect, ref=np.max)
-    return spect.T
+    D = np.log(np.abs(librosa.stft(y)) ** 2)[:, :640]
+
+    D = np.stack([D, D, D], axis=2)
+
+    D -= np.min(D)
+    D *= 256.0 / np.max(D)
+
+    if title == "style_audio":
+        import ipdb; ipdb.set_trace()
+
+    cv2.imwrite('dataset/' + title + '.png', D)
+
+    # with open("dataset/" + title + ".png", "wb") as file:
+    #     pickle.dump(D, file)
+
+    return D
+    # spect = librosa.feature.melspectrogram(S=D, n_mels=128, fmax=8000)
+    # spect = librosa.feature.melspectrogram(S=D, fmax=8000)
+    # spect = librosa.power_to_db(spect, ref=np.max)[:, :640]
+    # return spect.T
 
 
 def autocrop_image(location):
@@ -51,11 +70,11 @@ def autocrop_image(location):
 
 def plot_spect(spect, title):
     print(spect.shape)
-    fig = plt.figure(frameon=False, figsize=(10, 4))
+    fig = plt.figure(frameon=False, figsize=(4.44444, 0.88888))
     ax = plt.Axes(fig, [0., 0., 1., 1.])
     ax.set_axis_off()
     fig.add_axes(ax)
-    librosa.display.specshow(spect.T, y_axis='mel', fmax=8000, x_axis='time')
+    librosa.display.specshow(spect.T, y_axis='log', cmap='gray_r', fmax=8000, x_axis='time')
     plt.margins(0)
     plt.axis('off')
     plt.savefig(title, bbox_inches='tight', transparent=True, pad_inches=0)
@@ -65,37 +84,45 @@ def plot_spect(spect, title):
 def create_array_and_save(audio_path, title, spectogram_title, pickle_out):
     genres = []
     X_spect = np.empty((0, 640, 128))
-    spect = create_spectogram(audio_path)
-    plot_spect(spect, spectogram_title)
+    spect = create_spectogram(audio_path, title)
 
-    # Normalize for small shape differences
-    spect = spect[:640, :]
-    X_spect = np.append(X_spect, [spect], axis=0)
-
-    if title == "content_audio":
-        genres.append(dict_genres["Instrumental"])
-    else:
-        genres.append(dict_genres["Hip-Hop"])
-
-    y_arr = np.array(genres)
-    np.savez("dataset/" + title, X_spect, y_arr)
-
-    pickle.dump(X_spect, pickle_out)
+    # plot_spect(spect, spectogram_title)
+    #
+    # # Normalize for small shape differences
+    # spect = spect[:640, :]
+    # X_spect = np.append(X_spect[:640, :], [spect], axis=0)
+    #
+    # if title == "content_audio":
+    #     genres.append(dict_genres["Instrumental"])
+    # else:
+    #     genres.append(dict_genres["Hip-Hop"])
+    #
+    # y_arr = np.array(genres)
+    # np.savez("dataset/" + title, X_spect, y_arr)
+    #
+    # pickle.dump(X_spect, pickle_out)
+    #
+    # return X_spect
 
 
 def preprocess_audio():
+    # import ipdb;
+    # ipdb.set_trace()
     content_audio_title = "content_audio"
-    content_audio_spectogram = "dataset/content_spectogram.png"
+    content_audio_spectogram = "dataset/content_spectogram_stft.png"
     content_audio_path = "dataset/content_audio/Dee_Yan-Key_-_01_-_Elegy_for_Argus.mov"
-    content_audio_spectogram_location = open("dataset/content_spectogram.pickle", "wb")
+    content_audio_spectogram_location = open("dataset/content_spectogram_stft.pickle", "wb")
     content_audio = create_array_and_save(content_audio_path, content_audio_title, content_audio_spectogram,
                                           content_audio_spectogram_location)
 
     style_audio_title = "style_audio"
-    style_audio_spectogram = "dataset/style_spectogram.png"
-    style_audio_path = "dataset/style_audio/Yung_Kartz_-_02_-_Lethal.mov"
-    style_audio_spectogram_location = open("dataset/style_spectogram.pickle", "wb")
+    style_audio_spectogram = "dataset/style_spectogram_stft.png"
+    style_audio_path = "dataset/style_audio/Yung_Kartz_-_02_-_Lethal.mp3"
+    style_audio_spectogram_location = open("dataset/style_spectogram_stft.pickle", "wb")
     style_audio = create_array_and_save(style_audio_path, style_audio_title, style_audio_spectogram,
                                         style_audio_spectogram_location)
 
     return content_audio, style_audio
+
+
+preprocess_audio()
