@@ -297,4 +297,4 @@ for i in range(iterations):
     print('Image saved as', fname)
     print('Iteration %d completed in %ds' % (i, end_time - start_time))
 
-    import ipdb; ipdb.set_trace(fname, img)
+import ipdb; ipdb.set_trace()
