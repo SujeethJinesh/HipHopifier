@@ -33,6 +33,9 @@ def get_tids_from_directory(audio_dir):
 def create_spectogram(audio_path, title):
     y, sr = librosa.load(audio_path)
 
+    if title == "style_spectogram_stft_body_moving":
+        import ipdb; ipdb.set_trace()
+
     D = np.log(np.abs(librosa.stft(y)) ** 2)[:, :434]
 
     D = np.stack([D, D, D], axis=2)
@@ -42,9 +45,6 @@ def create_spectogram(audio_path, title):
 
     D_max = np.max(D)
     D *= 256.0 / np.max(D)
-
-    # if title == "style_audio":
-    #     import ipdb; ipdb.set_trace()
 
     cv2.imwrite('dataset/' + title + '.png', D)
 
