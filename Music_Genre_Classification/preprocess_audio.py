@@ -176,5 +176,5 @@ parser.add_argument('--tv_weight', type=float, default=1.0, required=False,
                     help='Total Variation weight.')
 
 preprocess_audio()
-os.system("python3 keras_image_style_transfer_2.py dataset/content_spectogram_stft_bossa_nova.png dataset/style_spectogram_stft_body_moving.png outputs/output_new")
+os.system("python3 keras_image_style_transfer_2.py dataset/content_spectogram_stft_bossa_nova.png dataset/style_spectogram_stft_body_moving.png outputs/output_new --iter 200")
 deprocess_audio("outputs/output_new_at_iteration_199.png")
