@@ -83,8 +83,8 @@ content_weight = args.content_weight
 # dimensions of the generated picture.
 # width, height = load_img(base_image_path).size
 x = K.variable(open("dataset/content_spectogram_stft.pickle", "rb"))
-import ipdb; ipdb.set_trace()
-img_nrows = 400
+# import ipdb; ipdb.set_trace()
+# img_nrows = 400
 img_ncols = int(width * img_nrows / height)
 
 # util function to open, resize and format pictures into appropriate tensors
