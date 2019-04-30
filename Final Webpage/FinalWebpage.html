@@ -162,8 +162,8 @@
       <h4>Dataset</h4>
       <p>
         One challenge with style transfer is that there is no objective way to evaluate the success of a style transfer. Thus,
-        we standardized our evaluation by picking one style sample and one audio sample. For the content sample, we utilized
-        jazz elevator music from <a target="_blank" href="https://www.bensound.com">Bensound</a>. For the style sample, we utilized
+        we standardized our evaluation by picking one style sample and one audio sample. For the style sample, we utilized
+        jazz elevator music from <a target="_blank" href="https://www.bensound.com">Bensound</a>. For the content sample, we utilized
         a specifically selected track from the  <a target="_blank" href="http://freemusicarchive.org/">GTZAN Genre Collection</a>.
       </p>
       <p>
@@ -217,7 +217,7 @@
         </tr>
         <tr>
           <td>Wide-Shallow Baseline</td>
-          <td>Fair</td>
+          <td>Comprehensible</td>
         </tr>
         <tr>
           <td>VGG-19</td>
@@ -230,8 +230,8 @@
       </table>
       <p>
         Using the experiment scheme described in the experiment plan, we arrived at the following results.
-        The Wide-Shallow Baseline contained elements from both content sources, although the mixing
-        was erratic and lyrics come across muffled. Unfortunately, the VGG-19 experiment did not
+        The Wide-Shallow Baseline contained elements from both content sources, although the instrument mixing
+        contains some imperfect artifacts and the lyrics are slightly muffled. Unfortunately, the VGG-19 experiment did not
         match our hypotheses and merely outputted noise. <b>TODO(Hriday): One sentencer here</b>
       </p>
 
@@ -272,7 +272,7 @@
       <h2>Result Analysis</h2>
       <h4>Wide-Shallow Architecture</h4>
       <p>
-        Overall, the "fair" rating of this architecture appears to match results from similar architectures. For example, consider
+        Overall, the "comprehensible" rating of this architecture appears to match results from similar architectures. For example, consider
         the following style transfer from Dmitry Ulyanov, who also utilizes 4096 filters for texture synthesis:
       </p>
       <p>
@@ -291,7 +291,7 @@
       </p>
       <p>
         Clearly, both sources are present in the style trasnfer, but the artifacts sound garbled and imperfectly blended.
-        Although the sample does sound subjectively stronger, Ulyanov's samples do not contain lyrics and utilize
+        Although the Ulyanov's sample does sound subjectively stronger, it does not contain lyrics and utilizes
         symphony instruments only, which likely makes the blending easier.
       </p>
       <p>
@@ -302,7 +302,7 @@
       </p>
       <p>
         One fascinating result is that the wide-shallow network had no prior training at all and yet still produced
-        "Fair" results as defined by our qualitative scale. Although counterintuitive, similar results are actually seen in
+        "comprehensible" results as defined by our qualitative scale. Although counterintuitive, similar results are actually seen in
         parallel areas of resarch. For example, Ustyuzhaninov et al. found that
         shallow, untrained convolutional architecture can achieve comparable results in texture synthesis to the trained state
         of the art (<a target="_blank" href="https://arxiv.org/pdf/1606.00021.pdf">source</a>). They suggest that despite the
