@@ -103,6 +103,14 @@
         by Grinsten, Duoung, Ozernov, and Perez, an untrained convolutional neural network can actually capture components
         of both the style and content.
       </p>
+      <p>
+        <div style="text-align: center;">
+          <img style="height: 300px;" alt="" src="imgs/jeremy/shallow_architecture.png">
+        </div>
+      </p>
+      <p>
+        This figure shows the wide-shallow baseline architecture.
+      </p>
 
       <h4>Architecture 2: Using VGG-19</h4>
       <p>
@@ -121,16 +129,16 @@
       </p>
 
       <p>
-      This figure shows the architecture for VGG19. We used
-      <code>'block1_conv1', 'block2_conv1', 'block3_conv1', 'block4_conv1', 'block5_conv1'</code> for style transfer.
-      </p>
-      <p>
         <div style="text-align: center;">
           <img style="height: 200px;" alt="" src="imgs/sujeeth/vgg19.jpg">
           <div>Credit to <a target="_blank"
               href="https://www.researchgate.net/figure/llustration-of-the-network-architecture-of-VGG-19-model-conv-means-convolution-FC-means_fig2_325137356">Research
               Gate</a></div>
         </div>
+      </p>
+      <p>
+      This figure shows the architecture for VGG19. We used
+      <code>'block1_conv1', 'block2_conv1', 'block3_conv1', 'block4_conv1', 'block5_conv1'</code> for style transfer.
       </p>
 
       <h4>Architecture 3: [TODO (Hriday): Update your bit]</h4>
@@ -182,7 +190,7 @@
         <ul>
           <li><b>Human-Equivalent:</b> the outputted audio could plausibly have been created by a human in the desired style.</li>
           <li><b>Comprehensible:</b> the outputted audio contains easily-understood lyrics and well-blended instrumental artifacts.</li>
-          <li><b>Fair:</b> the outputted audio contains some elements from content and style, but lacks refinement in how they are blended.</li>
+          <li><b>Fair:</b> the outputted audio contains some elements from content and style but lacks refinement in how they are blended.</li>
           <li><b>Incomprehensible:</b> the outputted audio captures neither content nor style and may have degraded to random noise.</li>
         </ul>
       </p>
@@ -359,8 +367,8 @@
         </tr>
         <tr>
           <td>Jeremy Aguilon</td>
-          <td>Created a CNN for music style transfer, to be compared with the above models
-            in terms of performance.</td>
+          <td>Created the baseline convolutional neural net and provided research for why untrained convolutions provide strong
+            style transfer results</td>
         </tr>
       </table>
       <br><br>
