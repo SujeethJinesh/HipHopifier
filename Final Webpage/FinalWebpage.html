@@ -69,34 +69,48 @@
         (2)</a>, and <a href="https://arxiv.org/pdf/1805.07848.pdf">Wavenet Autoencoders</a>. While these architectures
         are certainly worth exploring as well, we focused on adding complexity to a shallow untrained neural net
         to explore how far this architecture can be pushed.
+
       <h2>Approach</h2>
 
-      Sujeeth took the approach of using a CNN-RNN architecture and doing style transfer on the Convolutional layers. We
-      found an article about <a target="_blank"
-        href="https://towardsdatascience.com/using-cnns-and-rnns-for-music-genre-recognition-2435fb2ed6af">using a
-        CNN-RNN article to classify music</a> and wanted to use that as a jumping off point to transfer the style of hip
-      hop to another target song.
-      We chose a CNN-RNN architecture initially because an RNN would take into account the time domain of the music.
-      Since music depends on the previous sounds, it would be ideal to use an RNN architecture. The only uncertainty we
-      had with this was that we wouldn't know how to do style transfer with the RNN layers, if at all. The network will
-      operate on spectograms so that we can feed in an image. The approach
-      isn't novel, but will give us a good baseline.
+      <h4>Preprocessing Pipeline</h4>
+      <p>
+        TODO
+      </p>
 
-      Along with this Sujeeth converted both the style and content songs into spectrograms, and then collapsed them into
-      grayscale images to then feed through VGG19. We could do style transfer on these spectrograms using VGG19 and
-      produce an output spectrogram. From this spectrogram we could reconstruct the audio and see what a default or
-      baseline would look like when using traditional style transfer methods.
-      <br><br>
-      Hriday is working on a minimalist implementation that uses an untrained CNN for style transfer. The structure of
-      this untrained network is what will be experimented with. Since musical style is somewhat more abstract than
-      images, the results obtained via this untrained network will explore what it means to transfer style without
-      stringent constraints.
-      <br><br>
-      Jeremy is using a convolutional neural net to classify on the spectrogram images; style transfer
-      will occur using the hidden representations. We predict that although it is a similar approach to Sujeeth's, the
-      different classifier downstream (dense vs. recurrent) will result in different results. We can then compare the
-      subjective quality of the transfers.
+      <h4>Baseline: Wide-Shallow Architecture</h4>
 
+      <p>
+        To establish a baseline, a wide-shallow architecture was implemented using the techniques in our reserach
+        of prior art. This involved creating a neural network with one convolution of 4096 filters. As described in
+        <a target="_blank" href="https://www.researchgate.net/publication/320754682_Audio_style_transfer">Audio Style Transfer</a>
+        by Grinsten, Duoung, Ozernov, and Perez, an untrained convolutional neural network can actually capture components
+        of both the style and content.
+      </p>
+
+      <h4>Exploring Depth: Using VGG-19</h4>
+      <p>
+        <img style="height: 200px;" alt="" src="imgs/sujeeth/VGG-16-Visualization.png">
+        <br>
+        <i>Visualization of edges of deep convolutional architectures, such as VGG-16. We hypothesized that primitive shape
+          detection would aid style transfer (Credit <a
+            href="https://www.researchgate.net/figure/Visualizing-the-convolutional-filters-of-the-customized-model-AlexNet-VGG16-VGG19-in_fig2_322917076"
+            target="_blank">
+            Sivaramakrishnan Rajaraman</a>).</i>
+      </p>
+      <p>
+        As an extension the shallow approach, we experimented if adding <i>depth</i> using a pretrained neural network
+        would yield better results. Although VGG-19 was pretrained on an extremely different problem set, its ability
+        to detect primitives such as edges and basic shapes was hypothesized to be useful, even for style transfer.
+      </p>
+
+      <h4>[TODO (Hriday): Update your bit]</h4>
+      <p>
+        <b>TODO: Update</b>
+        Hriday is working on a minimalist implementation that uses an untrained CNN for style transfer. The structure of
+        this untrained network is what will be experimented with. Since musical style is somewhat more abstract than
+        images, the results obtained via this untrained network will explore what it means to transfer style without
+        stringent constraints.
+      </p>
 
       <br>
 
