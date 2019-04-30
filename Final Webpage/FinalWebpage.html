@@ -72,7 +72,7 @@
       </p>
       <p>
           While VAEs and GANs are certainly worth exploring as well, we focused on adding complexity to a shallow untrained neural
-          net to explore how far this architecture can be pushed by adding complexity to it.
+          net to explore how far this architecture can be pushed.
       </p>
 
 
@@ -251,6 +251,16 @@
       <h4>VGG-19</h4>
       <p>
         Resulting Audio<br>
+        <p>
+          <audio controls>
+            <source src="audio/sujeeth/output_new_1_iteration.wav" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </p>
+        <p>
+          Output 1 Iteration Spectrogram<br>
+          <img height="450px" src="imgs/sujeeth/output_new_at_iteration_0.png" />
+        </p>
         <audio controls>
           <source src="audio/sujeeth/output_new_200_iterations.wav" type="audio/mpeg">
           Your browser does not support the audio element.
@@ -334,6 +344,7 @@
         spectrograms before and after style transfer as shown in the images in the results. Our loss was high over the
         different images, but gradually got better, tuning the different parameters of style transfer might have resulted
         in less jerkiness to reduce loss and less of a garbled audio file.
+        Our results seem to be in line with other <a target="_blank" href="https://dmitryulyanov.github.io/audio-texture-synthesis-and-style-transfer/">experiments</a>, because VGG19 is not suited for audio, which is 1D, but VGG takes in 2D information.
       </p>
       <hr>
       <footer>
