@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Deep Learning Class Project
+    | Georgia Tech | Fall 2018: CS 4803 / 7643</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 60px;
+      /* 60px to make the container go all the way to the bottom of the topbar */
+    }
+
+    .vis {
+      color: #3366CC;
+    }
+
+    .data {
+      color: #FF9900;
+    }
+  </style>
+
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+
+      <!-- Title and Name -->
+      <h1>HipHopifier</h1>
+      <span style="font-size: 20px; line-height: 1.5em;"><strong>Sujeeth Jinesh, Hriday Kamshatti, Jeremy
+          Aguilon</strong></span><br>
+      <span style="font-size: 18px; line-height: 1.5em;">Spring 2019 CS 4803 / 7643 Deep Learning: Class
+        Project</span><br>
+      <span style="font-size: 18px; line-height: 1.5em;">Georgia Tech</span>
+      <hr>
+
+      This webpage template is based on a similar template from Dr. Devi Parikh's
+      <a href="https://samyak-268.github.io/F18CS4476/">Intro to Computer Vision course</a>.
+
+      <!-- Goal -->
+      <h2>Introduction</h2>
+      <p>
+        For this project, we explored methodologies in style transfer for audio. Style transfer in audio encompasses
+        challenges such as taking one genre of music and synthesizing it with traits from another genre.
+        We were motivated to pursue this topic for a variety of reasons. First, style transfering music could help DJs make
+        better blends of beats or transition between music easier.
+        Furthermore, production music is a <a target="_blank"
+          href="https://variety.com/2017/biz/news/production-music-billion-dollar-business-study-1202563223/">billion-dollar
+          industry</a>. These pieces
+        are typically placed in the background of marketing media and film. They are often
+        simple pieces that could benefit with the extra volume in genre that deep learning like this
+        provides.
+      </p>
+      <h2>Prior Art and Motivation</h2>
+      <p>
+        Currently, there are several approaches for musical style transfer involving
+        <a target="_blank" href="https://www.researchgate.net/publication/320754682_Audio_style_transfer">Wide, Shallow Convolutional Neural Networks</a>.
+        We wanted to compare this pre-existing art with using deeper neural networks.
+        Furthermore, there are a few approaches for musical style transfer involving <a target="_blank"
+          href="https://arxiv.org/abs/1809.07575">VAE's and GAN's (1)</a>, <a
+          href="https://medium.com/@suraj.jayakumar/tonenet-a-musical-style-transfer-c0a18903c910">VAE's and GAN's
+          (2)</a>, and <a href="https://arxiv.org/pdf/1805.07848.pdf">Wavenet Autoencoders</a>.
+      </p>
+      <p>
+          While VAEs and GANs are certainly worth exploring as well, we focused on adding complexity to a shallow untrained neural
+          net to explore how far this architecture can be pushed.
+      </p>
+
+      <h2>Approach</h2>
+
+      <h4>Preprocessing Pipeline</h4>
+      <p>
+        <div style="text-align: center;">
+        <img style="height: 300px;" alt="" src="imgs/STFT_Visualization.png">
+      </div>
+        <br>
+      </p>
+      <p>
+        All of the architectures followed the same general preprocessing pipeline in order to perform style transfer.
+        In order to make convolutional style transfer of a 1-dimensional waveform tractable, we represent audio tracks
+        as a 2-dimensional image. This image is produced using a Short Time Fourier Transform (STFT), which
+        encodes a long waveform into equal-length segments and computes frequency magnitude and phase content for each segment.
+      </p>
+      <p>
+        <div style="text-align: center;">
+          <img style="height: 500px;" alt="" src="imgs/StyleTransferStructure.png">
+          <p>Pipeline used for style transfer.</p>
+        </div>
+      </p>
+
+      <h4>Architecture 1: Shallow 1D CNN</h4>
+      <p>
+        The first approach taken to this problem was to apply an untrained, wide 1D-Convolution filter network to the time domain signal and run style transfer.
+        From a signal-processing perspective, this is essentially extracting a variety of frequency-domain characteristics in one signal (albeit without any structure) and attempting to
+        transfer them to another signal via gradient descent. This approach quickly failed, with results turning out to be very noisy, presumably due to the frequency bands defined by the filters not being clear cut.
+      </p>
+      <p>
+              A 1D approach with slightly better results came from using the spectrogram as a multi-channel sound with each frequency band being one channel. This approach, introduced for 
+        <a target="_blank" href="https://dmitryulyanov.github.io/audio-texture-synthesis-and-style-transfer">audio texture synthesis</a> by Ulyanov, was adapted into a PyTorch pipeline. Experimentation with adding in content loss resulted in worse results, however. 
+      </p>
+
+      <h4>Architecture 2: Wide-Shallow Baseline</h4>
+      <p>
+        To establish a baseline, a wide-shallow architecture was implemented using the techniques in our reserach
+        of prior art. This involved creating a neural network with one convolution of 4096 filters. As described in
+        <a target="_blank" href="https://www.researchgate.net/publication/320754682_Audio_style_transfer">Audio Style Transfer</a>
+        by Grinsten, Duoung, Ozernov, and Perez, an untrained convolutional neural network can actually capture components
+        of both the style and content.
+      </p>
+      <p>
+        <div style="text-align: center;">
+          <img style="height: 300px;" alt="" src="imgs/jeremy/shallow_architecture.png">
+        </div>
+      </p>
+      <p>
+        <center>This figure shows the wide-shallow baseline architecture.</center>
+      </p>
+
+      <h4>Architecture 3: Using VGG-19</h4>
+      <p>
+        <div style="text-align: center;">
+        <img style="height: 200px;" alt="" src="imgs/sujeeth/VGG-16-Visualization.png">
+        <br>
+        <i>Visualization of edges of deep convolutional architectures, such as VGG-16. We hypothesized that primitive shape
+          detection would aid style transfer (Credit <a
+            href="https://www.researchgate.net/figure/Visualizing-the-convolutional-filters-of-the-customized-model-AlexNet-VGG16-VGG19-in_fig2_322917076"
+            target="_blank">
+            Sivaramakrishnan Rajaraman</a>).</i>
+        </div>
+      </p>
+      <p>
+        As an extension the shallow approach, we experimented if adding <i>depth</i> using a pretrained neural network
+        would yield better results. Although VGG-19 was pretrained on an extremely different problem set, its ability
+        to detect primitives such as edges and basic shapes was hypothesized to be useful, even for style transfer.
+      </p>
+
+      <p>
+        <div style="text-align: center;">
+          <img style="height: 200px;" alt="" src="imgs/sujeeth/vgg19.jpg">
+          <div>Credit to <a target="_blank"
+              href="https://www.researchgate.net/figure/llustration-of-the-network-architecture-of-VGG-19-model-conv-means-convolution-FC-means_fig2_325137356">Research
+              Gate</a></div>
+        </div>
+      </p>
+      <p>
+      This figure shows the architecture for VGG19. We used
+      <code>'block1_conv1', 'block2_conv1', 'block3_conv1', 'block4_conv1', 'block5_conv1'</code> for style transfer.
+      </p>
+      
+
+      <h2>Experimental Plan</h2>
+      <h4>Dataset</h4>
+      <p>
+        One challenge with style transfer is that there is no objective way to evaluate the success of a style transfer. Thus,
+        we standardized our evaluation by picking one style sample and one audio sample. For the content sample, we utilized
+        jazz elevator music from <a target="_blank" href="https://www.bensound.com">Bensound</a>. For the style sample, we utilized
+        a specifically selected track from the  <a target="_blank" href="http://freemusicarchive.org/">GTZAN Genre Collection</a>.
+      </p>
+      <p>
+        <audio controls>
+          <source src="audio/sujeeth/bensound-theelevatorbossanova.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <audio controls>
+          <source src="audio/sujeeth/gtzan_hiphop_10s.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <br>
+        <i>(left) BenSound elevator music sample. (right) GTZAN Hip Hop sample.</i>
+      </p>
+      <p>
+        These two sources were selected for a variety of reasons. First, the elevator music is primarily instrumental while the
+        hip hop style source relies on lyrics and percussion. This constrains the difficulty of the style transfer
+        since our architectures would not need to deal with issues such as music key differences or colliding vocal utterances.
+        This also eases difficulty in subjectively evaluating a style transfer, since it would be very simple to hear
+        whether a particular audio artifact comes from the content or style source.
+      </p>
+      <p>
+        Finally, while there is no standardized way to evaluate a style transfer, we drafted the following scheme
+        when rating the output of each architecture:
+        <ul>
+          <li><b>Human-Equivalent:</b> the outputted audio could plausibly have been created by a human in the desired style.</li>
+          <li><b>Comprehensible:</b> the outputted audio contains easily-understood lyrics and well-blended instrumental artifacts.</li>
+          <li><b>Fair:</b> the outputted audio contains some elements from content and style but lacks refinement in how they are blended.</li>
+          <li><b>Incomprehensible:</b> the outputted audio captures neither content nor style and may have degraded to random noise.</li>
+        </ul>
+      </p>
+
+      <h4>Spectrogram Visuzalizations</h4>
+      <p>
+        <img height="300px" src="imgs/spectrogram_visualizations.png" />
+      </p>
+      <p>
+        The above STFT images were fed into each architecture and then inverted to generate sample audio.
+        Clearly, the content audio spectrogram appears very different than the style audio spectrogram.
+      </p>
+
+      <br><br>
+
+      <!-- Main Results Figure -->
+      <h2>Results</h2>
+      <h4>Overall Summary</h4>
+      <table class="table">
+        <tr>
+          <th>Architecture</th>
+          <th> Classification</th>
+        </tr>
+        <tr>
+          <td>Shallow 1D CNN</td>
+          <td>Poor</td>
+        </tr>
+        <tr>
+          <td>Wide-Shallow Baseline</td>
+          <td>Fair</td>
+        </tr>
+        <tr>
+          <td>VGG-19</td>
+          <td>Incomprehensible</td>
+        </tr>
+      </table>
+      <p>
+        Using the experiment scheme described in the experiment plan, we arrived at the following results. The 1D CNN gave us the content audio styled to a single set of notes from the style audio, suggesting that some subset of the style was transfered. The content, however was muffled by distortion.
+        The Wide-Shallow Baseline contained elements from both content sources, although the instrument mixing
+        contains some imperfect artifacts and the lyrics are slightly muffled. Unfortunately, the VGG-19 experiment did not
+        match our hypotheses and merely outputted noise. 
+      </p>
+
+      <h4>1D CNN</h4>
+      <p>
+        Resulting Audio<br>
+        <audio controls>
+          <source src="audio/hriday/hiphopElevator.wav" type="audio/mp3">
+          Your browser does not support the audio element.
+        </audio>
+      </p>
+      <p>
+        Input Spectrograms<br>
+        <img height="400px" src="imgs/hriday/contentStyle.png"/>
+      </p>
+      <p>
+        Output Spectrogram<br>
+        <img height="400px" src="imgs/hriday/hiphopElevatorSpectrogram.png"/>
+      </p>
+
+      <h4>Wide-Shallow</h4>
+      <p>
+        Resulting Audio<br>
+        <audio controls>
+          <source src="audio/jeremy/wide_shallow_output.mp3" type="audio/mp3">
+          Your browser does not support the audio element.
+        </audio>
+      </p>
+      <p>
+        Output Spectrogram<br>
+        <img height="400px" src="imgs/jeremy/wide_shallow_spectrogram.png"/>
+      </p>
+
+      <h4>VGG-19</h4>
+      <p>
+        Resulting Audio<br>
+        <p>
+          <audio controls>
+            <source src="audio/sujeeth/output_new_1_iteration.wav" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </p>
+        <p>
+          Output 1 Iteration Spectrogram<br>
+          <img height="450px" src="imgs/sujeeth/output_new_at_iteration_0.png" />
+        </p>
+        <audio controls>
+          <source src="audio/sujeeth/output_new_200_iterations.wav" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </p>
+      <p>
+        Output 200 Iterations Spectrogram<br>
+        <img height="450px" src="imgs/sujeeth/output_new_at_iteration_199.png" />
+      </p>
+
+
+      <br></br>
+      A visual representation of other songs we attempted to style transfer with over the course of 200 iterations
+      (GIF):
+      <img src="imgs/sujeeth/out_optimized.gif" />
+
+      <br><br>
+      <!-- Analysis -->
+      <h2>Result Analysis</h2>
+      <h4>Shallow 1D CNN</h4>
+
+      <p>
+        The efficacy of style transfer with a shallow 1D CNN is quite intuitive when one considers how speech/music is encoded. Our spectrogram contains frequency data windowed at every 25ms or so. Common speech processing heuristics denote this as being the time for which a speech signal's statistics are <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.185.3622&rep=rep1&type=pdf">generally stationary</a>, and speech encoded at this time resolution gives a perceptually untarnished reconstruction.
+      </p>
+      <p>
+           Thus running a 1D time-convolution along a frequency channel would capture periodicity in the spectrogram at that frequency (an important component of speech/music) and potentially transfer over these characteristics. This part was somewhat accomplished by the 1D CNN.
+      </p>
+       <p>
+           Where the 1D CNN failed is that it transfered over only one particular style of the style audio (a single style segment). The fact that the style signal as a whole was not stationary may be the cause of this. As such, this network might find more success in transfering over stationary style (fixed notes) onto content audio. 
+
+           Furthermore, adding in post-processing to remove what seems like white noise would also help with the comprehensibility of the content audio. 
+      </p>
+
+      
+
+
+      <h4>Wide-Shallow Architecture</h4>
+      <p>
+        Overall, the "comprehensible" rating of this architecture appears to match results from similar architectures. For example, consider
+        the following style transfer from Dmitry Ulyanov, who also utilizes 4096 filters for texture synthesis:
+      </p>
+      <p>
+        <audio controls="">
+          <source src="audio/jeremy/imperial.mp3">
+        </audio>
+        <audio controls="">
+          <source src="audio/jeremy/usa.mp3">
+        </audio>
+        <audio controls="">
+          <source src="audio/jeremy/imperial_usa.mp3">
+        </audio>
+        <br>
+        <i>First: Content Source, Second: Style Source, Third: Outputted Sample. (<a
+            href="https://dmitryulyanov.github.io/audio-texture-synthesis-and-style-transfer/">Source)</a></i>
+      </p>
+      <p>
+        Clearly, both sources are present in the style trasnfer, but the artifacts sound garbled and imperfectly blended.
+        Although the Ulyanov's sample does sound subjectively stronger, it does not contain lyrics and utilizes
+        symphony instruments only, which likely makes the blending easier.
+      </p>
+      <p>
+        <img style="height: 300px;" alt="" src="imgs/jeremy/texture_synthesis.png">
+        <br>
+        <i>Texture synthesis involving three source images. From left to right: source, Fourier-transform, shallow
+          convolutional, PCA. Credit <a target="_blank" href="https://arxiv.org/pdf/1606.00021.pdf">Ustyunhaninov et al.</a></i>
+      </p>
+      <p>
+        One fascinating result is that the wide-shallow network had no prior training at all and yet still produced
+        "comprehensible" results as defined by our qualitative scale. Although counterintuitive, similar results are actually seen in
+        parallel areas of resarch. For example, Ustyuzhaninov et al. found that
+        shallow, untrained convolutional architecture can achieve comparable results in texture synthesis to the trained state
+        of the art (<a target="_blank" href="https://arxiv.org/pdf/1606.00021.pdf">source</a>). They suggest that despite the
+        randomized convolutions, "the Gram matrices computed from the feature maps of
+        convolutional neural networks generically lead to useful summary statistics..." Since audio style transfer also
+        requires matching the Gram Matrix of a source, it follows that the output was reasonable.
+      </p>
+
+      <h4>VGG 19</h4>
+      <!-- <h4>Do the results make sense? Why or why not? Describe what kind of visualization/analysis you performed in order
+        to verify that your results 1) are correct and 2) explain differences in performance from what was expected
+        (e.g. what appeared in papers). Provide specific claims about why you think your model is or is not doing
+        better, and justify those with qualitative and quantitative experiments (not necessarily just final accuracy
+        numbers, but statistics or other data about what the model is doing).</h4> -->
+      <p>
+        The VGG-19 results were quite surprising given the hypothesis of spectrograms benefitting from edge detection.
+        The audio is very garbled and wasn't very representative of any of either
+        audio. We suspect it had to do with the reconstruction process since we were dealing with images of
+        spectrograms instead of the raw values of the spectrograms. When we converted the spectrogram back, we lost a lot
+        of phase information, which we attempted to correct for with a lossy guess of the phase (essentially interpolating
+        it using inverse fourier transform). This results in the audio being garbled.
+      </p>
+      <p>
+        It was also fascinating to see how
+        the audio also degrades the more iterations we used. At 1 iteration, the audio sounds reasonable, but at 200
+        iterations the tail end of the reconstruction becomes extremely garbled.
+        The results make sense because a regular CNN wouldn't get phase information, and getting a decent reconstruction
+        at all was fascinating to get. In order to verify we did style transfer correctly, we did a visual analysis of the
+        spectrograms before and after style transfer as shown in the images in the results. Our loss was high over the
+        different images, but gradually got better, tuning the different parameters of style transfer might have resulted
+        in less jerkiness to reduce loss and less of a garbled audio file.
+        Our results seem to be in line with other <a target="_blank" href="https://dmitryulyanov.github.io/audio-texture-synthesis-and-style-transfer/">experiments</a>, because VGG19 is not suited for audio, which is 1D, but VGG takes in 2D information.
+      </p>
+      <hr>
+      <footer>
+        <p>© Sujeeth Jinesh, Hriday Kamshatti, Jeremy Aguilon</p>
+      </footer>
+
+      <br><br>
+      <!-- Team -->
+      <h2>Team Member Identification</h2>
+      <h4>Provide a list of team members and what each member did in a table</h4>
+
+
+      <table style="width:100%">
+        <tr>
+          <th>Name</th>
+          <th>Description of Work</th>
+        </tr>
+        <tr>
+          <td>Sujeeth Jinesh</td>
+          <td>Converted audio into spectrograms to be fed into neural nets. Attempted to adapt <a target="_blank"
+              href="http://faroit.com/keras-docs/1.2.1/applications/#musictaggercrnn">Music Tagger CRNN</a>, <a
+              target="_blank"
+              href="https://towardsdatascience.com/using-cnns-and-rnns-for-music-genre-recognition-2435fb2ed6af">Priya
+              Dwivedi's CNN-RNN</a>, and <a target="_blank"
+              href="https://github.com/keras-team/keras-applications/blob/master/keras_applications/vgg19.py">VGG19</a>
+            for style transfer task. Trained it against audio samples and ran it for multiple different iteration
+            lengths to compare results.</td>
+        </tr>
+        <tr>
+          <td>Hriday Kamshatti</td>
+          <td>Adapted a pytorch style transfer pipeilne for use with a 1D CNN. Looked into alternative DSP techniques and audio reconstruction solutions from magnitude spectrogram data.</td>
+        </tr>
+        <tr>
+          <td>Jeremy Aguilon</td>
+          <td>Created the baseline convolutional neural net and provided research for why untrained convolutions provide strong
+            style transfer results</td>
+        </tr>
+      </table>
+      <br><br>
+    </div>
+  </div>
+</body>
+
+</html>
