@@ -1,1 +1,0 @@
-Simply run the styleTransfer.ipynb file to get plots/reconstructed audio. Look in the outputs file for reconstructed audio.
